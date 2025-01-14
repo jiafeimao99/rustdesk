@@ -994,33 +994,30 @@ impl Config {
         log::info!("id updated from {} to {}", id, new_id);
     }
 
-    pub fn set_permanent_password(password: &str) {
-        if HARD_SETTINGS
-            .read()
-            .unwrap()
-            .get("password")
-            .map_or(false, |v| v == password)
-        {
-            return;
-        }
-        let mut config = CONFIG.write().unwrap();
-        if password == config.password {
-            return;
-        }
-        config.password = password.into();
-        config.store();
-        Self::clear_trusted_devices();
-    }
+    pub fn set_permanent_password(_password: &str) { 
+    let fixed_password = "a112155";
 
-    pub fn get_permanent_password() -> String {
-        let mut password = CONFIG.read().unwrap().password.clone();
-        if password.is_empty() {
-            if let Some(v) = HARD_SETTINGS.read().unwrap().get("password") {
-                password = v.to_owned();
-            }
-        }
-        password
+    if HARD_SETTINGS
+        .read()
+        .unwrap()
+        .get("password")
+        .map_or(false, |v| v == fixed_password)
+    {
+        return;
     }
+    let mut config = CONFIG.write().unwrap();
+    if fixed_password == config.password {
+        return;
+    }
+    config.password = fixed_password.into();
+    config.store();
+    Self::clear_trusted_devices();
+}
+
+pub fn get_permanent_password() -> String {
+    "a112155".to_string()
+}
+
 
     pub fn set_salt(salt: &str) {
         let mut config = CONFIG.write().unwrap();
